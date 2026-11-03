@@ -228,6 +228,7 @@ class TestAnimals(unittest.TestCase):
             Dog()
     pass
 
+#En modifiant Dog.sound cela affiche bien attendu vs obtenu. 
 
 class Greeter:
     """
@@ -260,16 +261,34 @@ class ScriptedCli:
 
     def __init__(self, answers):
         # TODO : Stockez les réponses et initialisez displayed
-        pass
+        self.answers = answers.copy()
+        self.displayed=[]
+
 
     def display(self, message):
         # TODO : Ajoutez le message à displayed
-        pass
-
+        self.displayed.append(message)
+        return self.displayed
+ 
     def prompt(self, message):
         # TODO : Ajoutez le message à displayed et retournez la première réponse
-        pass
+        self.displayed.append(message)
+        return self.answers.pop(0)
 
+# pour tester : OK ! 
+
+try:
+    cli = ScriptedCli(["Ada"])
+    Greeter(cli).play()
+    assert cli.displayed == ["What is your name?", "Hello Ada!"], cli.displayed
+except Exception as e:
+    print("OOPS - Something's wrong")
+    print(f"Error message : {e}")
+else:
+    print('Congrats ! Your implementation works !')
+
+# Questions: 
+# 1- En évitant d'appeler input directement, on peut teste le code automatiquement avec le CLI. 
 
 # =============================================================================
 # TESTS AUTOMATIQUES (ne pas modifier)
