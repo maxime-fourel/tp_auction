@@ -40,6 +40,7 @@ class Animal:
     """
 
     def __init__(self, name):
+        self.name = name
         # TODO : Créez l'attribut self.name avec le paramètre name
         pass
 
@@ -68,6 +69,9 @@ class Dog(Animal):
     TODO : Vous devez uniquement redéfinir sound() pour retourner "Woof"
     Ne réécrivez PAS describe() ! Elle est héritée d'Animal.
     """
+    def sound(self):
+        return "Woof"
+    
 
     # TODO : Redéfinissez la méthode sound() pour retourner "Woof"
     pass
@@ -78,9 +82,32 @@ class Cat(Animal):
     Classe fille d'Animal.
     TODO : Redéfinissez sound() pour retourner "Meow"
     """
+    def sound(self):
+        return "Meow"
 
     # TODO : Redéfinissez la méthode sound() pour retourner "Meow"
     pass
+
+
+# pour tester
+
+try:
+    assert Dog("Rex").describe() == "Rex says Woof"
+    assert Cat("Tom").describe() == "Tom says Meow"
+    assert Animal("Ghost").describe() == "Ghost says ..."
+    assert isinstance(Dog("Rex"), Animal)
+    assert issubclass(Cat, Animal)
+    assert "describe" not in vars(Dog), "describe must be inherited, not rewritten"
+except Exception as e:
+    print("OOPS - Something's wrong")
+    print(f"Error message : {e}")
+else:
+    print('Congrats ! Your implementation works !')
+
+#Questions : 
+# 1- On a redéfini la méthode sound dans Dog donc la méthode describe associée à Dog utilise la méthode sound de Dog. 
+print(Dog.__mro__) 
+# 2- Dog.__mro__ donne les classes appelées au cours du code (Dog puis Animal puis object)
 
 
 class Bird(Animal):
@@ -99,14 +126,42 @@ class Bird(Animal):
 
     def __init__(self, name, can_fly=True):
         # TODO : Appelez super().__init__(name) puis stockez can_fly
+        super().__init__(name)
+        self.can_fly=can_fly
+
+        
         pass
 
     # TODO : Redéfinissez sound() pour retourner "Tweet"
-    pass
+    def sound(self):
+        return "Tweet"
 
-    # TODO : Redéfinissez describe() pour compléter celle du parent
-    pass
+# TODO : Redéfinissez describe() pour compléter celle du parent
+    
+    def describe(self):
+        if self.can_fly:
+            return f"{super().describe()} and flies"
+        else:
+            return super().describe()
 
+    
+
+# pour tester
+
+try:
+    assert Bird("Tweety").describe() == "Tweety says Tweet and flies"
+    assert Bird("Pingu", can_fly=False).describe() == "Pingu says Tweet"
+    assert Bird("Tweety").name == "Tweety"
+except Exception as e:
+    print("OOPS - Something's wrong")
+    print(f"Error message : {e}")
+else:
+    print('Congrats ! Your implementation works !')
+
+# Questions : 
+# 1- Si on appelle pas super().init on se retrouve avec le même code que pour Animal or Birds n'a pas d'attribut name. 
+# 2- Il vaudrait mieux raise raise Error si elle n'est pas vouée à être utilisée. 
+    
 
 # =============================================================================
 # ÉCHAUFFEMENT 2 : LES TESTS UNITAIRES ET LES MOCKS
@@ -157,12 +212,20 @@ class TestAnimals(unittest.TestCase):
     """
 
     # TODO : Écrivez le test pour Dog
-    pass
+    def test_dog(self):
+        return self.assertEqual(Dog("Rex").describe(), "Rex says Woof")
+
+
 
     # TODO : Écrivez le test pour Bird qui ne vole pas
-    pass
+    def test_bird_cant_fly(self):
+        return self.assertEqual(Bird("Titi", False).describe(), "Titi says Tweet")
+     
 
     # TODO : Écrivez le test pour Dog sans nom (doit lever TypeError)
+    def test_dog_sans_nom(self):
+        with self.assertRaises(TypeError):
+            Dog()
     pass
 
 
